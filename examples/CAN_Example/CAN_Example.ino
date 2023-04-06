@@ -8,6 +8,7 @@
  */
 
 #include <CONBus.h> 
+#include <CANBusDriver.h>
 #include <ACAN2515.h>
 
 // Setup CANBus using ACAN2515
