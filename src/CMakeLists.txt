@@ -9,3 +9,5 @@ target_include_directories(CONBus
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+set_target_properties(CONBus PROPERTIES LINKER_LANGUAGE CXX)

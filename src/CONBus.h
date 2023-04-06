@@ -1,7 +1,9 @@
 #ifndef CONBUS_H
 #define CONBUS_H
 
+#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 namespace CONBus{
 
@@ -21,15 +23,15 @@ class CONBus {
         CONBus();
 
         template <typename T>
-        uint8_t addRegister(uint8_t conbus_address, T* register_address);
+        uint8_t addRegister(const uint8_t conbus_address, T* register_address);
 
         template <typename T>
-        uint8_t writeRegister(uint8_t conbus_address, T& value);
-        uint8_t writeRegisterBytes(uin8_t conbus_address, void* buffer, uint8_t& length);
+        uint8_t writeRegister(const uint8_t conbus_address, const T value);
+        uint8_t writeRegisterBytes(const uint8_t conbus_address, const void* buffer, const uint8_t length);
 
         template <typename T>
-        uint8_t readRegister(uint8_t conbus_address, T& value);
-        uint8_t readRegisterBytes(uint8_t conbus_address, void* buffer, uint8_t& length);
+        uint8_t readRegister(const uint8_t conbus_address, T& value);
+        uint8_t readRegisterBytes(const uint8_t conbus_address, void* buffer, uint8_t& length);
     private:
         uint8_t length_map_[256];
         void* pointer_map_[256];
@@ -43,7 +45,7 @@ CONBus::CONBus() {
 }
 
 template <typename T>
-uint8_t CONBus::addRegister(uint8_t conbus_address, T* register_address) {
+uint8_t CONBus::addRegister(const uint8_t conbus_address, T* register_address) {
     if (length_map_[conbus_address] > 0) {
         return ERROR_ADDRESS_ALREADY_USED;
     }
@@ -59,7 +61,7 @@ uint8_t CONBus::addRegister(uint8_t conbus_address, T* register_address) {
 }
 
 template <typename T>
-uint8_t CONBus::writeRegister(uint8_t conbus_address, T& value) {
+uint8_t CONBus::writeRegister(const uint8_t conbus_address, const T value) {
     if (length_map_[conbus_address] == 0) {
         return ERROR_ADDRESS_NOT_REGISTERED;
     }
@@ -68,12 +70,12 @@ uint8_t CONBus::writeRegister(uint8_t conbus_address, T& value) {
         return ERROR_DIFFERENT_TYPE_THAN_REGISTERED;
     }
 
-    *(pointer_map_[conbus_address]) = value;
+    *(T*)(pointer_map_[conbus_address]) = value;
 
     return SUCCESS;
 }
 
-uint8_t CONBus::writeRegisterBytes(uint8_t conbus_address, void* buffer, uint8_t& length) {
+uint8_t CONBus::writeRegisterBytes(const uint8_t conbus_address, const void* buffer, const uint8_t length) {
     if (length_map_[conbus_address] == 0) {
         return ERROR_ADDRESS_NOT_REGISTERED;
     }
@@ -88,7 +90,7 @@ uint8_t CONBus::writeRegisterBytes(uint8_t conbus_address, void* buffer, uint8_t
 }
 
 template <typename T>
-uint8_t CONBus::readRegister(uint8_t conbus_address, T& value) {
+uint8_t CONBus::readRegister(const uint8_t conbus_address, T& value) {
     if (length_map_[conbus_address] == 0) {
         return ERROR_ADDRESS_NOT_REGISTERED;
     }
@@ -97,12 +99,12 @@ uint8_t CONBus::readRegister(uint8_t conbus_address, T& value) {
         return ERROR_DIFFERENT_TYPE_THAN_REGISTERED;
     }
 
-    value = *(pointer_map_[conbus_address]);
+    value = *(T*)(pointer_map_[conbus_address]);
 
     return SUCCESS;
 }
 
-uint8_t CONBus::readRegisterBytes(uint8_t conbus_address, void* buffer, uint8_t& length) {
+uint8_t CONBus::readRegisterBytes(const uint8_t conbus_address, void* buffer, uint8_t& length) {
     memcpy(buffer, pointer_map_[conbus_address], length_map_[conbus_address]);
     length = length_map_[conbus_address];
 
