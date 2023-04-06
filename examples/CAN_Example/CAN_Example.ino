@@ -8,7 +8,6 @@
  */
 
 #include <CONBus.h> 
-#include <Serial.h>
 #include <ACAN2515.h>
 
 // Setup CANBus using ACAN2515
@@ -106,22 +105,6 @@ void setup() {
   conbus.addRegister(0, &useOven);
   conbus.addRegister(4, &numberOfOvenRacks);
   conbus.addRegister(21, &ovenTemperatureSetpoint);
-
-  Serial.print("useOven: ")
-  Serial.println(useOven);
-
-  conbus.writeRegister(0, true);
-
-  Serial.print("useOven: ")
-  Serial.println(useOven);
-
-  Serial.print("ovenTemperatureSetpoint: ")
-  Serial.println(ovenTemperatureSetpoint);
-
-  conbus.writeRegister(21, 400.0f);
-
-  Serial.print("ovenTemperatureSetpoint: ")
-  Serial.println(ovenTemperatureSetpoint);
 }
 
 void loop() {
@@ -155,18 +138,19 @@ void onCanRecieve() {
 
   // CONBus read register
   if (frame.id == (1000 + DEVICE_ID)) {
-    awaiting_fetch = true;
+    awaiting_read_response = true;
 
-    readRegisterMessage = *(*CAN_readRegisterMessage)frame.data;
+    readRegisterMessage = *(CAN_readRegisterMessage*)frame.data;
     register_to_fetch = readRegisterMessage.registerAddress;
   }
 
   // CONBus write register
   if (frame.id == (1200 + DEVICE_ID)) {
+    awaiting_write_response = true;
 
-    writeRegisterMessage = *(*CAN_writeRegisterMessage)frame.data;
+    writeRegisterMessage = *(CAN_writeRegisterMessage*)frame.data;
     conbus.writeRegisterBytes(writeRegisterMessage.registerAddress, writeRegisterMessage.value, writeRegisterMessage.length);
   
-    memcpy(&writeRegisterResponseMessage, *writeRegisterMessage, sizeof(writeRegisterResponseMessage));
+    memcpy(&writeRegisterResponseMessage, &writeRegisterMessage, sizeof(writeRegisterResponseMessage));
   }
 }
