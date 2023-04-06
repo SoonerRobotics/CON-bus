@@ -37,7 +37,7 @@ class CONBus {
         void* pointer_map_[256];
 };
 
-CONBus::CONBus() {
+inline CONBus::CONBus() {
     // Clear length map
     for (int i=0; i<256; i++) {
         length_map_[i] = 0;
@@ -45,7 +45,7 @@ CONBus::CONBus() {
 }
 
 template <typename T>
-uint8_t CONBus::addRegister(const uint8_t conbus_address, T* register_address) {
+inline uint8_t CONBus::addRegister(const uint8_t conbus_address, T* register_address) {
     if (length_map_[conbus_address] > 0) {
         return ERROR_ADDRESS_ALREADY_USED;
     }
@@ -61,7 +61,7 @@ uint8_t CONBus::addRegister(const uint8_t conbus_address, T* register_address) {
 }
 
 template <typename T>
-uint8_t CONBus::writeRegister(const uint8_t conbus_address, const T value) {
+inline uint8_t CONBus::writeRegister(const uint8_t conbus_address, const T value) {
     if (length_map_[conbus_address] == 0) {
         return ERROR_ADDRESS_NOT_REGISTERED;
     }
@@ -75,7 +75,7 @@ uint8_t CONBus::writeRegister(const uint8_t conbus_address, const T value) {
     return SUCCESS;
 }
 
-uint8_t CONBus::writeRegisterBytes(const uint8_t conbus_address, const void* buffer, const uint8_t length) {
+inline uint8_t CONBus::writeRegisterBytes(const uint8_t conbus_address, const void* buffer, const uint8_t length) {
     if (length_map_[conbus_address] == 0) {
         return ERROR_ADDRESS_NOT_REGISTERED;
     }
@@ -90,7 +90,7 @@ uint8_t CONBus::writeRegisterBytes(const uint8_t conbus_address, const void* buf
 }
 
 template <typename T>
-uint8_t CONBus::readRegister(const uint8_t conbus_address, T& value) {
+inline uint8_t CONBus::readRegister(const uint8_t conbus_address, T& value) {
     if (length_map_[conbus_address] == 0) {
         return ERROR_ADDRESS_NOT_REGISTERED;
     }
@@ -104,7 +104,7 @@ uint8_t CONBus::readRegister(const uint8_t conbus_address, T& value) {
     return SUCCESS;
 }
 
-uint8_t CONBus::readRegisterBytes(const uint8_t conbus_address, void* buffer, uint8_t& length) {
+inline uint8_t CONBus::readRegisterBytes(const uint8_t conbus_address, void* buffer, uint8_t& length) {
     memcpy(buffer, pointer_map_[conbus_address], length_map_[conbus_address]);
     length = length_map_[conbus_address];
 

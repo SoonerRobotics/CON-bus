@@ -23,54 +23,15 @@ static const uint32_t QUARTZ_FREQUENCY = 8UL * 1000UL * 1000UL;  // 8 MHz
 
 // Setup CONBus variables
 CONBus::CONBus conbus;
-
-static const uint8_t DEVICE_ID = 42; // CONBus Device ID
+CONBus::CANBusDriver conbus_can(conbus, 42); // device id 42
 
 bool useOven = false;
 int numberOfOvenRacks = 0;
 float ovenTemperatureSetpoint = 100;
 
-// Static variables for us in loop/interrupts
+// Static variables for use in loop/interrupts
 CANMessage frame;
 CANMessage outFrame;
-
-bool awaiting_read_response = false;
-uint8_t register_to_fetch = 0;
-
-bool awaiting_write_response = false;
-
-typedef struct{
-    uint8_t registerAddress;
-} CAN_readRegisterMessage;
-
-CAN_readRegisterMessage readRegisterMessage;
-
-typedef struct{
-    uint8_t registerAddress;
-    uint8_t length;
-    uint8_t reserved_;
-    uint8_t value[4];
-} CAN_readRegisterResponseMessage;
-
-CAN_readRegisterResponseMessage readRegisterResponseMessage;
-
-typedef struct{
-    uint8_t registerAddress;
-    uint8_t length;
-    uint8_t reserved_;
-    uint8_t value[4];
-} CAN_writeRegisterMessage;
-
-CAN_writeRegisterMessage writeRegisterMessage;
-
-typedef struct{
-    uint8_t registerAddress;
-    uint8_t length;
-    uint8_t reserved_;
-    uint8_t value[4];
-} CAN_writeRegisterResponseMessage;
-
-CAN_writeRegisterResponseMessage writeRegisterResponseMessage;
 
 void setup() {
 
@@ -88,17 +49,9 @@ void setup() {
   SPI1.begin();
 
   Serial.println("Configure ACAN2515");
-
   ACAN2515Settings settings(QUARTZ_FREQUENCY, 100UL * 1000UL);  // CAN bit rate 100 kb/s
   settings.mRequestedMode = ACAN2515Settings::NormalMode ; // Select Normal mode
   const uint16_t errorCode = can.begin(settings, onCanRecieve );
-
-  if (errorCode == 0) {
-    Serial.print("Actual bit rate: ");
-    Serial.print(settings.actualBitRate());
-  } else {
-    Serial.print(errorCode);
-  }
 
   // Create CONBus registers
   // The addresses can be anything from 0 to 255
@@ -108,25 +61,8 @@ void setup() {
 }
 
 void loop() {
-  if (awaiting_read_response) {
-    awaiting_read_response = false;
-
-    readRegisterResponseMessage.registerAddress = register_to_fetch;
-    conbus.readRegisterBytes(register_to_fetch, readRegisterResponseMessage.value, readRegisterResponseMessage.length);
-
-    outFrame.id = 1100 + DEVICE_ID;
-    outFrame.len = sizeof(readRegisterResponseMessage);
-    memcpy(outFrame.data, &readRegisterResponseMessage, sizeof(readRegisterResponseMessage));
-
-    const bool ok = can.tryToSend(outFrame);
-  }
-
-  if (awaiting_write_response) {
-    awaiting_write_response = false;
-
-    outFrame.id = 1300 + DEVICE_ID;
-    outFrame.len = sizeof(writeRegisterResponseMessage);
-    memcpy(outFrame.data, &writeRegisterResponseMessage, sizeof(writeRegisterResponseMessage));
+  if (conbus_can.isReplyReady()) {
+    conbus_can.getReply(outFrame.id, outFrame.len, outFrame.data);
 
     const bool ok = can.tryToSend(outFrame);
   }
@@ -136,21 +72,5 @@ void onCanRecieve() {
   can.isr();
   can.receive(frame);  
 
-  // CONBus read register
-  if (frame.id == (1000 + DEVICE_ID)) {
-    awaiting_read_response = true;
-
-    readRegisterMessage = *(CAN_readRegisterMessage*)frame.data;
-    register_to_fetch = readRegisterMessage.registerAddress;
-  }
-
-  // CONBus write register
-  if (frame.id == (1200 + DEVICE_ID)) {
-    awaiting_write_response = true;
-
-    writeRegisterMessage = *(CAN_writeRegisterMessage*)frame.data;
-    conbus.writeRegisterBytes(writeRegisterMessage.registerAddress, writeRegisterMessage.value, writeRegisterMessage.length);
-  
-    memcpy(&writeRegisterResponseMessage, &writeRegisterMessage, sizeof(writeRegisterResponseMessage));
-  }
+  conbus_can.readCanMessage(frame.id, frame.data);
 }

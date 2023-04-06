@@ -1,7 +1,7 @@
 #include <CONBus.h>
 #include <catch.hpp>
 
-TEST_CASE("Initialize test") {
+TEST_CASE("Initialize CONBus test") {
     CONBus::CONBus conbus;
 
     bool x;
@@ -13,7 +13,7 @@ TEST_CASE("Initialize test") {
     conbus.addRegister(30, &z);
 }
 
-TEST_CASE("Write test") {
+TEST_CASE("CONBus Write test") {
     CONBus::CONBus conbus;
 
     bool x = false;
@@ -37,7 +37,7 @@ TEST_CASE("Write test") {
     REQUIRE(z == 7.8f);
 }
 
-TEST_CASE("Read test") {
+TEST_CASE("CONBus Read test") {
     CONBus::CONBus conbus;
 
     bool x = false;
@@ -65,7 +65,7 @@ TEST_CASE("Read test") {
     REQUIRE(z2 == 7.8f);
 }
 
-TEST_CASE("Read bytes test") {
+TEST_CASE("CONBus Read bytes test") {
     CONBus::CONBus conbus;
 
     bool x = false;
@@ -100,7 +100,7 @@ TEST_CASE("Read bytes test") {
     REQUIRE(z2_length == sizeof(float));
 }
 
-TEST_CASE("Write bytes test") {
+TEST_CASE("CONBus Write bytes test") {
     CONBus::CONBus conbus;
 
     bool x = false;
