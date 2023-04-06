@@ -1,0 +1,6 @@
+CONBus	KEYWORD1
+addRegister	KEYWORD2
+readRegister	KEYWORD2
+readRegisterBytes	KEYWORD2
+writeRegister	KEYWORD2
+writeRegisterBytes	KEYWORD2
