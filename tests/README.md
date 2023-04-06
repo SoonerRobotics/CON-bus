@@ -6,7 +6,7 @@ We use Catch2 for our unit testing framework. You can read more about it here ht
 ## Adding new tests
 If you would like to contribute new tests to new classes, simply create a new file called `test_NAME.cpp` where NAME is relevant to whatever class or function you are testing. Look at the other examples in this directory as a formatting guide. You should only need the following two imports
 ```cpp
-#include <RobotLib.h>
+#include <CONBus.h>
 #include <catch.hpp>
 ```
 The build process will automatically find your new file during compilation. 
