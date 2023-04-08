@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore build and dev files
+build/
+keywords/
+.vscode/
+
+# Ignore coverage files
+out/
+*.gch
