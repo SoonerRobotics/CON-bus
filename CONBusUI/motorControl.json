@@ -1,0 +1,69 @@
+{
+    "name"      : "Motor Control",
+    "deviceID"  : 0,
+    "VersionID" : 0.1,
+    "LastUpdated": "4/9/2023",
+    "registers" : {
+        "0" : {
+            "registerName": "Forward PID: P",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "1" : {
+            "registerName": "Forward PID: I",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "2" : {
+            "registerName": "Forward PID: D",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "3" : {
+            "registerName": "Angular PID: P",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "4" : {
+            "registerName": "Angular PID: I",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "5" : {
+            "registerName": "Angular PID: D",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "6" : {
+            "registerName": "update period",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "7" : {
+            "registerName": "Center wheel diameter",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "8" : {
+            "registerName": "Distance between wheels",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "9" : {
+            "registerName": "Wheel Radius",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "10" : {
+            "registerName": "wheelbase length",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        },
+        "11" : {
+            "registerName": "pulses per radian",
+            "type"        : "float",
+            "defaultValue": 0.0  
+        }
+    }
+
+}

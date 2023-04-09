@@ -37,113 +37,6 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="1">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="7" column="1">
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Update Com Port</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QTableWidget" name="changeTable"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="QTableWidget" name="readTable"/>
-      </item>
-      <item row="7" column="0">
-       <widget class="QComboBox" name="comComboBox">
-        <item>
-         <property name="text">
-          <string>Select COM port</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="saveRegisterValuesButton">
-        <property name="text">
-         <string>Save CONbus registers values</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Status</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QPushButton" name="connectButton">
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="loadSelectedButton">
-        <property name="text">
-         <string>Load selected Registers</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="openRegisterValueButton">
-        <property name="text">
-         <string>Open CONbus registers values</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Configuration</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="saveConfigButton_3">
-        <property name="text">
-         <string>Load ALL Registers</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string>DISCONNECTED</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0" colspan="2">
-       <widget class="QTextEdit" name="statusBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="0" column="2">
      <spacer name="horizontalSpacer_2">
       <property name="orientation">
@@ -159,6 +52,111 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="2">
+       <widget class="QTableWidget" name="readTable"/>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="saveRegisterValuesButton">
+        <property name="text">
+         <string>Save CONbus registers values</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2">
+       <widget class="QPushButton" name="openRegisterValueButton">
+        <property name="text">
+         <string>Open CONbus registers values</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QPushButton" name="updateComButton">
+        <property name="text">
+         <string>Update Com Port List</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QPushButton" name="connectButton">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QComboBox" name="comComboBox">
+        <item>
+         <property name="text">
+          <string>Select COM port</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QSpinBox" name="baudrateSpinbox">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="suffix">
+         <string> kbit/s</string>
+        </property>
+        <property name="prefix">
+         <string>Bitrate </string>
+        </property>
+        <property name="minimum">
+         <number>100</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="value">
+         <number>125</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QTableWidget" name="changeTable"/>
+      </item>
+      <item row="15" column="1" colspan="2">
+       <widget class="QTextEdit" name="statusBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2">
+       <widget class="QPushButton" name="saveConfigButton_3">
+        <property name="text">
+         <string>Load ALL Registers</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QPushButton" name="loadSelectedButton">
+        <property name="text">
+         <string>Load selected Registers</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
