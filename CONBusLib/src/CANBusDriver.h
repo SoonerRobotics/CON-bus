@@ -51,9 +51,12 @@ class CANBusDriver {
         CAN_writeRegisterMessage writeRegisterMessage_;
         CAN_writeRegisterResponseMessage writeRegisterResponseMessage_;
 
-        bool awaiting_read_response_ = false;
-        uint8_t register_to_fetch_ = 0;
         bool awaiting_write_response_ = false;
+
+        void putRegisterAddressInQueue(const uint32_t register_address);
+        uint8_t register_fetch_queue_[256];
+        uint8_t register_fetch_queue_head_ = 0; // located at next entry to send
+        uint8_t register_fetch_queue_tail_ = 0; // located *after* the last entry in the queue
 };
 
 inline CANBusDriver::CANBusDriver(CONBus& conbus, const uint32_t device_id) : conbus_(conbus), device_id_(device_id) {}
@@ -61,10 +64,17 @@ inline CANBusDriver::CANBusDriver(CONBus& conbus, const uint32_t device_id) : co
 inline uint8_t CANBusDriver::readCanMessage(const uint32_t can_id, const void* buffer) {
     // CONBus read register
     if (can_id == ((uint32_t)1000 + device_id_)) {
-        awaiting_read_response_ = true;
-
         readRegisterMessage_ = *(CAN_readRegisterMessage*)buffer;
-        register_to_fetch_ = readRegisterMessage_.registerAddress;
+        if (readRegisterMessage_.registerAddress != 0xFF) {
+            putRegisterAddressInQueue(readRegisterMessage_.registerAddress);
+        } else {
+            // Put the whole memory map into the queue
+            for (int i=0; i<255; i++) {
+                if (conbus_.hasRegister(i)) {
+                    putRegisterAddressInQueue(i);
+                }
+            }
+        }
     }
 
     // CONBus write register
@@ -81,15 +91,13 @@ inline uint8_t CANBusDriver::readCanMessage(const uint32_t can_id, const void* b
 }
 
 inline bool CANBusDriver::isReplyReady() {
-    return awaiting_read_response_ || awaiting_write_response_;
+    return (register_fetch_queue_head_ != register_fetch_queue_tail_) || awaiting_write_response_;
 }
 
 inline uint8_t CANBusDriver::getReply(uint32_t& can_id, uint8_t& can_len, void* buffer) {
-    if (awaiting_read_response_) {
-        awaiting_read_response_ = false;
-
-        readRegisterResponseMessage_.registerAddress = register_to_fetch_;
-        conbus_.readRegisterBytes(register_to_fetch_, readRegisterResponseMessage_.value, readRegisterResponseMessage_.length);
+    if (register_fetch_queue_head_ != register_fetch_queue_tail_) {
+        readRegisterResponseMessage_.registerAddress = register_fetch_queue_[register_fetch_queue_head_];
+        conbus_.readRegisterBytes(readRegisterResponseMessage_.registerAddress, readRegisterResponseMessage_.value, readRegisterResponseMessage_.length);
 
         can_id = 1100 + device_id_;
         // The readRegisterResponseMessage_ is the full 7 bytes for a 4 byte buffer
@@ -97,6 +105,10 @@ inline uint8_t CANBusDriver::getReply(uint32_t& can_id, uint8_t& can_len, void* 
         can_len = sizeof(readRegisterResponseMessage_) - (4 - readRegisterResponseMessage_.length);
 
         memcpy(buffer, &readRegisterResponseMessage_, sizeof(readRegisterResponseMessage_));
+
+        // Move head of the queue
+        register_fetch_queue_head_++;
+
         return SUCCESS; // end early so we dont overwrite a read response with a write response
     }
 
@@ -112,6 +124,10 @@ inline uint8_t CANBusDriver::getReply(uint32_t& can_id, uint8_t& can_len, void* 
     return SUCCESS;
 }
 
+inline void CANBusDriver::putRegisterAddressInQueue(const uint32_t register_address) {
+    register_fetch_queue_[register_fetch_queue_tail_] = register_address;
+    register_fetch_queue_tail_++;
+}
 
 
 } // end CONBus namespace

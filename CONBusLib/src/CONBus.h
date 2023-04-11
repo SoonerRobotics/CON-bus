@@ -25,6 +25,8 @@ class CONBus {
         template <typename T>
         uint8_t addRegister(const uint8_t conbus_address, T* register_address);
 
+        bool hasRegister(const uint8_t conbus_address);
+
         template <typename T>
         uint8_t writeRegister(const uint8_t conbus_address, const T value);
         uint8_t writeRegisterBytes(const uint8_t conbus_address, const void* buffer, const uint8_t length);
@@ -42,6 +44,11 @@ inline CONBus::CONBus() {
     for (int i=0; i<256; i++) {
         length_map_[i] = 0;
     }
+
+    // Clear Pointer map
+    for (int i=0; i<256; i++) {
+        pointer_map_[i] = nullptr;
+    }
 }
 
 template <typename T>
@@ -58,6 +65,10 @@ inline uint8_t CONBus::addRegister(const uint8_t conbus_address, T* register_add
     pointer_map_[conbus_address] = register_address;
 
     return SUCCESS;
+}
+
+inline bool CONBus::hasRegister(const uint8_t conbus_address) {
+    return length_map_[conbus_address] > 0;
 }
 
 template <typename T>
