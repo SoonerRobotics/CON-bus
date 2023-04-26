@@ -137,3 +137,22 @@ TEST_CASE("CONBus Write bytes test") {
     REQUIRE(y2_length == sizeof(uint32_t));
     REQUIRE(z2_length == sizeof(float));
 }
+
+TEST_CASE("CONBus Read Only test") {
+    CONBus::CONBus conbus;
+
+    uint32_t x = 2;
+    uint32_t y = 4;
+
+    conbus.addRegister(10, &x);
+    conbus.addReadOnlyRegister(20, &y);
+
+    REQUIRE(x == 2);
+    REQUIRE(y == 4);
+
+    conbus.writeRegister(10, 6);
+    conbus.writeRegister(20, 8);
+
+    REQUIRE(x == 6);
+    REQUIRE(y == 4);
+}
