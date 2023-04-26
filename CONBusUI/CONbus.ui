@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>728</width>
-    <height>513</height>
+    <width>811</width>
+    <height>666</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,23 +21,7 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>5</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="2">
+    <item row="0" column="3">
      <spacer name="horizontalSpacer_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -53,49 +37,9 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="1">
+    <item row="0" column="2">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="2">
-       <widget class="QTableWidget" name="readTable"/>
-      </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="saveRegisterValuesButton">
-        <property name="text">
-         <string>Save CONbus registers values</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="2">
-       <widget class="QPushButton" name="openRegisterValueButton">
-        <property name="text">
-         <string>Open CONbus registers values</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="QPushButton" name="updateComButton">
-        <property name="text">
-         <string>Update Com Port List</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="QPushButton" name="connectButton">
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1">
-       <widget class="QComboBox" name="comComboBox">
-        <item>
-         <property name="text">
-          <string>Select COM port</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QSpinBox" name="baudrateSpinbox">
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -117,10 +61,68 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QTableWidget" name="changeTable"/>
+      <item row="5" column="2">
+       <widget class="QPushButton" name="saveRegisterValuesButton">
+        <property name="text">
+         <string>Save CONbus registers values</string>
+        </property>
+       </widget>
       </item>
-      <item row="15" column="1" colspan="2">
+      <item row="1" column="2">
+       <widget class="QTableWidget" name="readTable"/>
+      </item>
+      <item row="8" column="1">
+       <widget class="QPushButton" name="connectButton">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QPushButton" name="updateComButton">
+        <property name="text">
+         <string>Update Com Port List</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QComboBox" name="comComboBox">
+        <item>
+         <property name="text">
+          <string>Select COM port</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QPushButton" name="openRegisterValueButton">
+        <property name="text">
+         <string>Open CONbus registers values</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2">
+       <widget class="QPushButton" name="loadSelectedButton">
+        <property name="text">
+         <string>Load selected Registers</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="2">
+       <widget class="QPushButton" name="saveConfigButton_3">
+        <property name="text">
+         <string>Load ALL Registers</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QTableWidget" name="changeTable">
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="1" colspan="2">
        <widget class="QTextEdit" name="statusBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -142,21 +144,37 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="2">
-       <widget class="QPushButton" name="saveConfigButton_3">
+      <item row="0" column="1">
+       <widget class="QLabel" name="editTableLabel">
         <property name="text">
-         <string>Load ALL Registers</string>
+         <string>EDIT TABLE: </string>
         </property>
        </widget>
       </item>
-      <item row="8" column="2">
-       <widget class="QPushButton" name="loadSelectedButton">
+      <item row="0" column="2">
+       <widget class="QLabel" name="readTableLabel">
         <property name="text">
-         <string>Load selected Registers</string>
+         <string>READ TABLE: </string>
         </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="0" column="0">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>5</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
