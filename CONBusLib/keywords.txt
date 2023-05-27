@@ -3,8 +3,9 @@ CAN_readRegisterResponseMessage	KEYWORD1
 CAN_writeRegisterMessage	KEYWORD1
 CAN_writeRegisterResponseMessage	KEYWORD1
 CANBusDriver	KEYWORD1
-getReply	KEYWORD2
 isReplyReady	KEYWORD2
+peekReply	KEYWORD2
+popReply	KEYWORD2
 readCanMessage	KEYWORD2
 CONBus	KEYWORD1
 addReadOnlyRegister	KEYWORD2

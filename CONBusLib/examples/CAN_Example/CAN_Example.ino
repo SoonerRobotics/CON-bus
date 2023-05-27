@@ -63,9 +63,14 @@ void setup() {
 
 void loop() {
   if (conbus_can.isReplyReady()) {
-    conbus_can.getReply(outFrame.id, outFrame.len, outFrame.data);
+    conbus_can.peekReply(outFrame.id, outFrame.len, outFrame.data);
 
-    const bool ok = can.tryToSend(outFrame);
+    bool success = can.tryToSend(outFrame);
+
+    // If we successfully send the message, remove the message from the queue
+    if (success) {
+      conbus_can.popReply();
+    }
   }
 }
 

@@ -40,7 +40,8 @@ class CANBusDriver {
 
         uint8_t readCanMessage(const uint32_t can_id, const void* buffer);
         bool isReplyReady();
-        uint8_t getReply(uint32_t& can_id, uint8_t& can_len, void* buffer);
+        uint8_t peekReply(uint32_t& can_id, uint8_t& can_len, void* buffer);
+        uint8_t popReply();
 
     private:
         CONBus& conbus_;
@@ -94,7 +95,7 @@ inline bool CANBusDriver::isReplyReady() {
     return (register_fetch_queue_head_ != register_fetch_queue_tail_) || awaiting_write_response_;
 }
 
-inline uint8_t CANBusDriver::getReply(uint32_t& can_id, uint8_t& can_len, void* buffer) {
+inline uint8_t CANBusDriver::peekReply(uint32_t& can_id, uint8_t& can_len, void* buffer) {
     if (register_fetch_queue_head_ != register_fetch_queue_tail_) {
         readRegisterResponseMessage_.registerAddress = register_fetch_queue_[register_fetch_queue_head_];
         conbus_.readRegisterBytes(readRegisterResponseMessage_.registerAddress, readRegisterResponseMessage_.value, readRegisterResponseMessage_.length);
@@ -106,6 +107,21 @@ inline uint8_t CANBusDriver::getReply(uint32_t& can_id, uint8_t& can_len, void* 
 
         memcpy(buffer, &readRegisterResponseMessage_, sizeof(readRegisterResponseMessage_));
 
+        return SUCCESS; // end early so we dont overwrite a read response with a write response
+    }
+
+    if (awaiting_write_response_) {
+        can_id = 1300 + device_id_;
+        // Same as above, we have to reduce the size appropriately.
+        can_len = sizeof(writeRegisterResponseMessage_) - (4 - writeRegisterResponseMessage_.length);
+        memcpy(buffer, &writeRegisterResponseMessage_, sizeof(writeRegisterResponseMessage_));
+    }
+
+    return SUCCESS;
+}
+
+inline uint8_t CANBusDriver::popReply() {
+    if (register_fetch_queue_head_ != register_fetch_queue_tail_) {
         // Move head of the queue
         register_fetch_queue_head_++;
 
@@ -114,11 +130,6 @@ inline uint8_t CANBusDriver::getReply(uint32_t& can_id, uint8_t& can_len, void* 
 
     if (awaiting_write_response_) {
         awaiting_write_response_ = false;
-
-        can_id = 1300 + device_id_;
-        // Same as above, we have to reduce the size appropriately.
-        can_len = sizeof(writeRegisterResponseMessage_) - (4 - writeRegisterResponseMessage_.length);
-        memcpy(buffer, &writeRegisterResponseMessage_, sizeof(writeRegisterResponseMessage_));
     }
 
     return SUCCESS;
